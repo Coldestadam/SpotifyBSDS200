@@ -1,0 +1,6 @@
+data/*.*
+data/users/*.csv
+.ipynb_checkpoints/
+*.csv
+*.parquet
+*.tdf
