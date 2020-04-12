@@ -1,0 +1,50 @@
+# Authors: Kai Middlebrook
+
+version: '3.7'
+services:
+  main-worker:
+    build: .
+    # image: dsjobs:dev
+    command: celery worker --app=dsjobs --pool=gevent --autoscale=15,10 --loglevel=INFO --max-tasks-per-child=100 -Ofair
+    env_file:
+      - dev.env
+    depends_on:
+      - beat
+      - redis
+    restart: always
+
+  worker-postgres:
+    build: .
+    command: celery worker --app=dsjobs --pool=gevent --autoscale=15,10 --queues=postgres -n=postgres@%h --loglevel=INFO --max-tasks-per-child=100 -Ofair
+    env_file:
+      - dev.env
+    depends_on:
+      - beat
+      - redis
+    restart: always
+
+  beat:
+    build: .
+    command: celery beat --app=dsjobs --loglevel=INFO
+    env_file:
+      - dev.env
+    depends_on:
+      - redis
+    restart: always
+
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    restart: always
+
+
+  flower:
+    image: mher/flower
+    env_file:
+      - dev.env
+    restart: always
+    depends_on:
+      - redis
+    ports:
+      - 5555:5555

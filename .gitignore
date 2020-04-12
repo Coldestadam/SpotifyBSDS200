@@ -4,3 +4,5 @@ data/users/*.csv
 *.csv
 *.parquet
 *.tdf
+
+app/spotify_keys.json

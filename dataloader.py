@@ -24,17 +24,24 @@ schema_name = "song_pop"
 
 
 def load_data(base_dir):
-    """
-    loads the data from GCS if it doesn't exist local and saves to disk.
-    returns: a dict containing 
-            {'albums': albums_df, 
-            'artist_socials': artist_socials_df, 
-            'twitter': twitter_df} 
-    """
-    # urls to pointing to the GCS bucket where the data lives
+    """Loads the data from GCS if it doesn't exist locally and saves it to disk.
 
+    Args:
+        base_dir (path): The base directory where you want to store the data.
+
+    Returns:
+        all_dfs (dict): a dict containing
+            {'albums': albums_df,
+            'artist_socials': artist_socials_df,
+            'twitter': twitter_df}
+    """
+
+    # urls to pointing to the GCS bucket where the data lives
     albums_url = "https://storage.googleapis.com/song_pop/albums.parquet"
-    artists_socials = "https://storage.googleapis.com/song_pop/artist_socials.parquet"
+    # TODO: replace local path to GCS path
+    artists_socials = (
+        "/Users/kaimiddlebrook/github/artists_popularity/data/artist_socials.parquet"
+    )
     twitter_url = "https://storage.googleapis.com/song_pop/twitter.parquet"
 
     # set the data directory where the files will be stored locally
@@ -79,10 +86,16 @@ def load_pandas(base_dir):
 
 
 def load_sql(base_dir):
+    """Uploads local/remote data files to our SQL database.
+
+    Retrieves the local/remote data files and stores them in pandas dataframes.
+    Then we upload large dataframes to the database in chunks.
+
+    Args:
+        base_dir (path): The base directory where you want to store the data.
+
     """
-    retrieves the pandas files and uploads them to the sql
-    database
-    """
+
     # load/retrieve data from disk
     all_dfs = load_pandas(base_dir)
 
@@ -132,17 +145,50 @@ def load_sql(base_dir):
                 )
         bar.update(1)
     bar.close()
+
+    # grant universal access to the upload tables
+    for key in all_dfs.keys():
+        grant_universal_access(table_name=key, schema=schema_name)
+
     print("Data uploaded to database successfully!")
 
 
-def unit_tests(base_dir):
+def grant_universal_access(table_name, schema):
+    """Function to grant universal access to a table in our database.
+
+    Args:
+        table_name (str): A valid table name in the database
+        schema (str): A valid schema where the table is located in the database
     """
+
+    # make sure args are strings
+    assert isinstance(table_name, str) is True
+    assert isinstance(schema, str) is True
+
+    # create the query to grant universal access
+    query = f"""
+            GRANT ALL on {table_name}.{schema} to students;
+            """
+    # connect to database server
+    db = sqlalchemy.create_engine(db_url)
+
+    # execute query
+    with db.connect() as conn:
+        conn.execute(query)
+
+
+def unit_tests(base_dir):
+    """Runs tests to check if the data was uploaded to the database properly.
+
     Runs a series of test to confirm no data was lost or malformed
     after storing it locally and uploading it to the database.
     Checks that local pandas data and sql database table data match.
 
+    Args:
+        base_dir (path): The base directory where the data will be stored/saved.
+
     Test:
-        (1) checks if the number of rows in each sql table are 
+        (1) checks if the number of rows in each sql table are
             equal to the number of rows in each of the pandas dataframes
         (2) checks that count of total rows grouped by year are equal in the albums table/dateframe  # noqa: E501
             checks if the average follower count in the artist_socials table/dataframe are equal # noqa: E501
@@ -177,8 +223,8 @@ def unit_tests(base_dir):
     # albums
     SQLCursor.execute(
         """
-        SELECT year, COUNT(*) as ct 
-        FROM song_pop.albums 
+        SELECT year, COUNT(*) as ct
+        FROM song_pop.albums
         GROUP BY 1 ORDER BY ct DESC;
         """
     )
