@@ -154,10 +154,87 @@ def plot_audio_influence(base_dir):
     """
     print(print_statement)
 
+def plot_track_follower_relationship(base_dir):
+    """Plots a scatter plot to show the relationship of track count and follower
+    counts as artists reach our threshold of being "popular".
+    
+    Uses sql to gather the number of followers and tracks per artist, then
+    removes artists who have greater than 200 tracks. We then calculate the 85th,
+    90th and 95th percentiles for follwer counts. The 90th percentile is our 
+    threshold for what makes an artist "popular", and the other two percentiles
+    are used to subset our data to seek insight of artists that are approaching
+    popularity. Next, we use that subset to plot a scatter plot.
+
+    Args:
+        base_dir (path): The base directory you want the plot to be saved to.
+
+    """
+
+    # make sure the plot directory exists or create it so we can save our plot
+    plot_dir = Path(base_dir) / "plot"
+    Path(plot_dir).mkdir(parents=True, exist_ok=True)
+
+    # load tables into pandas
+    with engine.connect() as conn:
+    
+        #Joins artist_socials and albums to get data
+        query = f"""
+                SELECT lhs.artist_id, follower_count, total_tracks
+                FROM (
+                    SELECT artist_id, MAX(follower_count) as follower_count
+                    FROM song_pop.artist_socials
+                    GROUP BY artist_id) as lhs
+                INNER JOIN
+                    (SELECT artist_id, SUM(track_count) as total_tracks
+                    FROM song_pop.albums
+                    GROUP BY artist_id) as rhs
+                ON lhs.artist_id = rhs.artist_id
+                WHERE total_tracks <= 200;
+                """
+        data = pd.read_sql(query, con)
+
+    #Artists above the 90th Percentile is defined as popular
+    threshold = data.quantile(q=0.9)['follower_count']
+
+    #Getting the 85th and 95th Percentile
+    pct_85 = data.quantile(q=0.85)['follower_count']
+    pct_95 = data.quantile(q=0.95)['follower_count']
+
+    #Getting all artists who are between the 85th and 95th Percentile of Follower Counts
+    filter_boolean = (data.follower_count >= pct_85) & (data.follower_count <= pct_95)
+
+    #Getting X and Y values for our scatter plot
+    x = data.total_tracks[filter_boolean]
+    y = data.follower_count[filter_boolean]
+
+
+    #Plotting the Scatter Plot
+    plt.clf()
+    plt.scatter(x, y)
+    plt.plot([0,200], [threshold, threshold], 'r', label='Popularity Threshold = {}'.format(int(threshold)))
+    plt.title('Artists within 85-95 Percentiles for Follower Count')
+    plt.xlabel('Total Tracks')
+    plt.ylabel('Follower Count')
+    plt.legend()
+
+    #Saving the file
+    filename = plot_dir / "follower_track_relationship.png"
+    plt.savefig(filename, bbox_inches='tight')
+
+    print_statement = f"""
+        Scatter Plot showing the relationship of follower and track counts of 
+        artists is saved to {filename}.
+
+    """
+    print(print_statement)
+
+
+
 
 if __name__ == "__main__":
     base_dir = Path().cwd()
 
     # plot correlation matrix between artist Spotify followers and Twitter metric
-    # plot_twitter_influence(base_dir)
+    plot_twitter_influence(base_dir)
     plot_audio_influence(base_dir)
+    plot_track_follower_relationship(base_dir)
