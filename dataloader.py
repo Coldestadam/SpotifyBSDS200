@@ -39,9 +39,7 @@ def load_data(base_dir):
     # urls to pointing to the GCS bucket where the data lives
     albums_url = "https://storage.googleapis.com/song_pop/albums.parquet"
     # TODO: replace local path to GCS path
-    artists_socials = (
-        "/Users/kaimiddlebrook/github/artists_popularity/data/artist_socials.parquet"
-    )
+    artists_socials = "https://storage.cloud.google.com/song_pop/artist_socials.parquet"
     twitter_url = "https://storage.googleapis.com/song_pop/twitter.parquet"
 
     # set the data directory where the files will be stored locally
