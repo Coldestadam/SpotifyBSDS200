@@ -277,16 +277,58 @@ def unit_tests(base_dir):
     print("Passed ALL Tests!!!")
 
 
+# ----------- Plotting -----------
+def plot_corrMatrix(corrMatrix, filepath):
+    """Function to create a plot of a correlation matrix and save it.
+
+    Args :
+        corrMatrix (dataframe) : A dataframe with pre-computed correlation
+            scores between each column.
+        filepath (str) : The filepath to save the plot on disk.
+    """
+
+    # make heatmap of the corrMatrix
+    heat = sn.heatmap(corrMatrix, annot=True)
+    heat.set_title(
+        "Correlation Matrix"
+    )
+    plt.tight_layout()
+
+    # save heatmap
+    plt.savefig(filepath)
+
+    print_statement = f"Correlation Matrix Heatmap saved to: {filepath}."
+    print(print_statement)
+
+def plot_scatterMatrix(df, filepath):
+    """Function to create a plot of a scatter plot matrix and save it.
+
+    Args :
+        df (dataframe) : A dataframe with the columns for the scatter plot matrix.
+        filepath (str) : The filepath to save the plot on disk.
+    """
+
+    sns.set(style="ticks")
+    # plot every column except username (handled automatically by seaborn)
+    scatterMatrix = sns.pairplot(combined)
+    plt.tight_layout()
+
+    # save heatmap
+    plt.savefig(filepath)
+    print_statement = f"Scatter Plot Matrix saved to: {filepath}."
+    print(print_statement)
+
+
 def plot_twitter_influence(base_dir):
-    """Plots a correlation matrix between artist follower_counts and twitter
-    metrics.
+    """Plots and saves two diagrams: a correlation matrix and a scatter plot
+    matrix between artist follower_counts and twitter metrics.
 
     Uses sql to filter and join the artist_socials and twitter tables from our
     database. Next, we calculate a correlation matrix between the following
     numerical variables: follower_count (Spotify), followers, following, likes,
-    tweets, and verified. All varibales except follower_count are from twitter.
-    Finally, we plot a heatmap of the covariance matrix and save the plot to a
-    local directory.
+    tweets. All varibales except follower_count are from twitter.
+    Finally, we plot a heatmap of the covariance matrix and the scatter plot matrix
+    and save them to a local directory.
 
     Args:
         base_dir (path): The base directory you want the plot to be saved to.
@@ -327,27 +369,16 @@ def plot_twitter_influence(base_dir):
                 """
         combined = pd.read_sql(query, conn)
 
-    # create correlation matrix
+    # plot and save correlation matrix
     corrMatrix = combined.loc[
         :, ["follower_count", "followers", "following", "likes", "tweets", "verified"]
     ].corr()
-
-    # make heatmap of the corrMatrix
-    heat = sn.heatmap(corrMatrix, annot=True)
-    heat.set_title(
-        "Correlation Matrix between Spotify Follower Count and Twitter Metrics"
-    )
-    plt.tight_layout()
-
-    # save heatmap
     filename = plot_dir / "follower_count_twitter_metrics_corr.png"
-    plt.savefig(filename)
+    plot_corrMatrix(corrMatrix, filename)
 
-    print_statement = f"""
-        Correlation Matrix Heatmap between Spotify follower_count and Twitter metrics
-        saved to: {filename}.
-    """
-    print(print_statement)
+    # plot and save scatter plot matrix
+    filename = plot_dir / "follower_count_twitter_metrics_scatterMatrix.png"
+    plot_scatterMatrix(combined, filename)
 
 
 def plot_audio_influence(base_dir):
@@ -375,7 +406,7 @@ def plot_audio_influence(base_dir):
 
     # load tables into pandas
     with engine.connect() as conn:
-        # filter-join artist_socials and twitter tables
+        # filter-join artist_socials and tracks tables
         query = f"""
                 select
                     follower_count, danceability, energy, loudness,
@@ -398,25 +429,14 @@ def plot_audio_influence(base_dir):
                 """
         combined = pd.read_sql(query, conn)
 
-    # create correlation matrix
+    # plot and save correlation matrix
     corrMatrix = combined.corr()
-
-    # make heatmap of the corrMatrix
-    heat = sn.heatmap(corrMatrix)
-    heat.set_title(
-        "Correlation Matrix between Spotify Follower Count and Audio Characteristics"
-    )
-    plt.tight_layout()
-
-    # save heatmap
     filename = plot_dir / "follower_count_audio_characteristics_corr.png"
-    plt.savefig(filename)
+    plot_corrMatrix(corrMatrix, filename)
 
-    print_statement = f"""
-        Correlation Matrix Heatmap between Spotify follower_count and Audio
-        Characteristics saved to: {filename}.
-    """
-    print(print_statement)
+    # plot and save scatter plot matrix
+    filename = plot_dir / "follower_count_audio_characteristics_scatterMatrix.png"
+    plot_scatterMatrix(combined, filename)
 
 
 def plot_track_follower_relationship(base_dir, max_track=500):
