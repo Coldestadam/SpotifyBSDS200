@@ -172,6 +172,7 @@ def grant_universal_access(table_name, schema):
     # execute query
     with engine.connect() as conn:
         conn.execute(query)
+        conn.commit()
 
 
 def unit_tests(base_dir):
@@ -284,7 +285,7 @@ def plot_twitter_influence(base_dir):
     Uses sql to filter and join the artist_socials and twitter tables from our
     database. Next, we calculate a correlation matrix between the following
     numerical variables: follower_count (Spotify), followers, following, likes,
-    tweets, and verified. All varibales except follower_count are from twitter.
+    tweets. All varibales except follower_count are from twitter.
     Finally, we plot a heatmap of the covariance matrix and save the plot to a
     local directory.
 
@@ -311,7 +312,7 @@ def plot_twitter_influence(base_dir):
                     where rn = 1
                         and username is not NULL) as lhs
                 join
-                    (select username, followers, following, likes, tweets, verified
+                    (select username, followers, following, likes, tweets
                     from (select *,
                             row_number() OVER (PARTITION BY id
                                                ORDER BY followers DESC) rn
@@ -321,15 +322,14 @@ def plot_twitter_influence(base_dir):
                         and followers is not NULL
                         and following is not NULL
                         and likes is not NULL
-                        and tweets is not NULL
-                        and verified is not NULL) as rhs
+                        and tweets is not NULL) as rhs
                 using(username);
                 """
         combined = pd.read_sql(query, conn)
 
     # create correlation matrix
     corrMatrix = combined.loc[
-        :, ["follower_count", "followers", "following", "likes", "tweets", "verified"]
+        :, ["follower_count", "followers", "following", "likes", "tweets"]
     ].corr()
 
     # make heatmap of the corrMatrix
@@ -397,6 +397,7 @@ def plot_audio_influence(base_dir):
                 using(artist_id)
                 """
         combined = pd.read_sql(query, conn)
+    engine.commit()
 
     # create correlation matrix
     corrMatrix = combined.corr()
