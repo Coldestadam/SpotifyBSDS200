@@ -420,19 +420,23 @@ def plot_audio_influence(base_dir):
     print(print_statement)
 
 
-def plot_track_follower_relationship(base_dir):
+def plot_track_follower_relationship(base_dir, max_track=500):
     """Plots a scatter plot to show the relationship of track count and follower
     counts as artists reach our threshold of being "popular".
 
     Uses sql to gather the number of followers and tracks per artist, then
-    removes artists who have greater than 200 tracks. We then calculate the 85th,
+    removes artists who have greater than 500 tracks. We then calculate the 85th,
     90th and 95th percentiles for follwer counts. The 90th percentile is our
     threshold for what makes an artist "popular", and the other two percentiles
     are used to subset our data to seek insight of artists that are approaching
     popularity. Next, we use that subset to plot a scatter plot.
 
+    If max_track is used, then we will subset the data to retain the artists who
+    have total track counts less than max_track.
+
     Args:
         base_dir (path): The base directory you want the plot to be saved to.
+        max_track (int): The maximum number of track counts an artist can have
 
     """
 
@@ -449,13 +453,14 @@ def plot_track_follower_relationship(base_dir):
                 FROM (
                     SELECT artist_id, MAX(follower_count) as follower_count
                     FROM song_pop.artist_socials
+                    WHERE username in (SELECT DISTINCT username FROM song_pop.twitter)
                     GROUP BY artist_id) as lhs
                 INNER JOIN
                     (SELECT artist_id, SUM(track_count) as total_tracks
                     FROM song_pop.albums
                     GROUP BY artist_id) as rhs
                 ON lhs.artist_id = rhs.artist_id
-                WHERE total_tracks <= 200;
+                WHERE total_tracks <= 500;
                 """
         data = pd.read_sql(query, conn)
 
@@ -468,7 +473,8 @@ def plot_track_follower_relationship(base_dir):
 
     # Getting all artists who are between
     # the 85th and 95th Percentile of Follower Counts
-    filter_boolean = (data.follower_count >= pct_85) & (data.follower_count <= pct_95)
+    # And have at most 200 tracks
+    filter_boolean = (data.follower_count >= pct_85) & (data.follower_count <= pct_95) & (data.total_tracks <= max_track)
 
     # Getting X and Y values for our scatter plot
     x = data.total_tracks[filter_boolean]
@@ -478,18 +484,18 @@ def plot_track_follower_relationship(base_dir):
     plt.clf()
     plt.scatter(x, y)
     plt.plot(
-        [0, 200],
+        [0, max_track],
         [threshold, threshold],
         "r",
         label="Popularity Threshold = {}".format(int(threshold)),
     )
     plt.title("Artists within 85-95 Percentiles for Follower Count")
-    plt.xlabel("Total Tracks")
+    plt.xlabel("Total Tracks (max_track = {})".format(max_track))
     plt.ylabel("Follower Count")
     plt.legend()
 
     # Saving the file
-    filename = plot_dir / "follower_track_relationship.png"
+    filename = plot_dir / "follower_track_relationship(most{}).png".format(max_track)
     plt.savefig(filename, bbox_inches="tight")
 
     print_statement = f"""
@@ -510,4 +516,5 @@ if __name__ == "__main__":
     # plotting
     plot_twitter_influence(base_dir)
     plot_audio_influence(base_dir)
-    plot_track_follower_relationship(base_dir)
+    plot_track_follower_relationship(base_dir, max_track=200)
+    plot_track_follower_relationship(base_dir, max_track=500)
