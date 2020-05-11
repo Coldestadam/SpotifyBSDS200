@@ -34,7 +34,7 @@ If you become confused during the report regarding our variables, please return 
 ![Plot #1](https://github.com/Coldestadam/SpotifyBSDS200/blob/master/plot/follower_track_relationship(most500).png?raw=true)
 ![Plot #2](https://github.com/Coldestadam/SpotifyBSDS200/blob/master/plot/follower_track_relationship(most200).png?raw=true)
 
-These plots show that there is really no linear or exponential relationship between follower count and the total number of tracks an artist has. The left plot shows the relationship of the data given through the SQL query and the right plot shows data only of artists that have at most 200 tracks. It seems that many artists with 1-25 tracks are considered popular, which was not what we expected. We expected there to be somewhat of a gradual increase of followers when the number of tracks increases.
+These plots show that there is really no linear or exponential relationship between follower count and the total number of tracks an artist has. The first plot shows the relationship of the data given through the SQL query and the second plot shows data only of artists that have at most 200 tracks. It seems that many artists with 1-25 tracks are considered popular, which was not what we expected. We expected there to be somewhat of a gradual increase of followers when the number of tracks increases.
 
 
 Total Tracks | Average Followers
@@ -61,3 +61,6 @@ Ava Beathard | 1247 | [https://instagram.com/avabeathard](https://instagram.com/
 Iasmin | 1126 | [https://instagram.com/iasmin.cantora](https://instagram.com/iasmin.cantora)
 
 This is a list of the top 5 artists who only have one track. Mc Marechal is considered popular and he happens to be a Brazilian Rapper, however the others seem to be influencers on Instagram and other online platforms like YouTube. To be clear, this list does not represent the data fairly, this list was created with a heavily filtered dataset through many inner joins in the query. However, the idea that influencers who have a large fanbase who create one track that considers them popular on Spotify seems to be true within the normal dataset.
+
+
+## How much does an artist's Twitter presence impact their popularity?
