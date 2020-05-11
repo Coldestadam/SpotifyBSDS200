@@ -12,7 +12,7 @@
 
 # Understanding Spotify Popularity
 
-We were able to gather data of Spotify artists and we became interested of what makes an artist "popular". We determined artists' popularity based on the number of Spotify followers they have and we contained other variables as well. As a glimpse of the other variables we used, we have the number of tracks artists have and the audio characteristics of their music. In this report, we dive further down to discover what variables can lead to an increase of followers artists have, or rather their popularity.
+We were able to gather data of Spotify artists and we became interested of what makes an artist "popular". We determined artists' popularity based on the number of Spotify followers they have and we contained other variables as well. As a glimpse of the other variables we used, we have the number of tracks artists have and the audio characteristics of their music. In this report, we dive further down to discover what variables can lead to an increase of followers that an artist can have, or rather their popularity.
 
 ### Variables
 If you become confused during the report regarding our variables, please return here!
@@ -27,5 +27,9 @@ If you become confused during the report regarding our variables, please return 
 8. **BRIAN PUT YOURS HERE**
 
 ## How many tracks on average, does an artist release prior to becoming popular?
-  The way we plan to solve this problem is by first using SQL to gather data to solve this problem. The variables we need to gather are the total number of *followers* and *tracks* that each artist has made. Once we have the data, we will look at the distributions of my variables and see what changes can be made, such as the removal of outliers. Then we will go further by looking at the relationship between the number of followers and track count to see if there is some linear or exponential relationship. We will view this relationship through our interpretation of the popularity threshold, which is the 90th percentile of the number of followers of all our Spotify artists. With this, we can create a subset of data around our popularity threshold to see what is the average number of tracks that artists have when they are close to being popular.
-  For future work, we aim to better understand the relationship between track counts and artist popularity for artists with few tracks. To this end, we will average the amount of followers for categories of the number of tracks, and the reason why there are popular artists who have one track.
+  We used SQL to gather data to solve this problem, and the variables we are the total number of *followers* and *tracks* that each artist has made. Once we collected the data, we looked at the distributions of my variables and saw what changes can be made to the SQL query, such as the removal of outliers. After, we began looking at the relationship between the number of followers and track count to see if there is some linear or exponential relationship. We viewied this relationship through our interpretation of the popularity threshold, which is the 90th percentile of the number of followers of all our Spotify artists. In other words, we got the number of followers that 90% of Spotify artists do not have, but 10% of artists have followers above that number. That 10% of all artists are considered "popular".
+  
+  With this, we can created a subset of data around our popularity threshold to see what is the average number of tracks that artists have when they are close to being popular. To answer the question, we plotted the relationship between the number of tracks and followers for the artist in our subset. Further, we averaged the amount of followers for separated categories that detailed a range for the number of tracks, and we found the reason why there are popular artists who have one track.
+
+![Plot #1](https://github.com/Coldestadam/SpotifyBSDS200/blob/master/plot/follower_track_relationship(most500).png?raw=true)
+![Plot #2](https://github.com/Coldestadam/SpotifyBSDS200/blob/master/plot/follower_track_relationship(most200).png?raw=true)
