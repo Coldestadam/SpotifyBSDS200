@@ -47,4 +47,5 @@ Total Tracks | Average Followers
 51-75 | 638,394
 26-50 | 550,359
 1-25 | 343,192
+
 The Table above shows the average follower counts of popular artists per category of tracks.
