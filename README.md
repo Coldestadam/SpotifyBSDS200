@@ -33,3 +33,18 @@ If you become confused during the report regarding our variables, please return 
 
 ![Plot #1](https://github.com/Coldestadam/SpotifyBSDS200/blob/master/plot/follower_track_relationship(most500).png?raw=true)
 ![Plot #2](https://github.com/Coldestadam/SpotifyBSDS200/blob/master/plot/follower_track_relationship(most200).png?raw=true)
+
+These plots show that there is really no linear or exponential relationship between follower count and the total number of tracks an artist has. The left plot shows the relationship of the data given through the SQL query and the right plot shows data only of artists that have at most 200 tracks. It seems that many artists with 1-25 tracks are considered popular, which was not what we expected. We expected there to be somewhat of a gradual increase of followers when the number of tracks increases.
+
+Total Tracks | Average Followers
+------------ | -----------------
+200+ | 1,583,177
+176-200 | 1,987,108
+151-175 | 897,072
+126-150 | 1,354,869
+101-125 | 1,283,653
+76-100 | 855,795
+51-75 | 638,394
+26-50 | 550,359
+1-25 | 343,192
+The Table above shows the average follower counts of popular artists per category of tracks.
