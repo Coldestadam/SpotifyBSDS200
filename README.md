@@ -14,7 +14,7 @@
 
 We were able to gather data of Spotify artists and we became interested of what makes an artist "popular". We determined artists' popularity based on the number of Spotify followers they have and we contained other variables as well. As a glimpse of the other variables we used, we have the number of tracks artists have and the audio characteristics of their music. In this report, we dive further down to discover what variables can lead to an increase of followers that an artist can have, or rather their popularity.
 
-### Variables
+### Variables Used
 If you become confused during the report regarding our variables, please return here!
 
 1. Follower Count - The number of Spotify followers for each artist
