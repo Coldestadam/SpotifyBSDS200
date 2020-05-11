@@ -54,10 +54,10 @@ The Table above shows the average follower counts of popular artists per categor
 
 Artist Name | Follower Count | Instagram
 ----------- | -------------- | ---------
-Mc Marechal | 145,567 | https://instagram.com/mcmarechal
-Zeph | 11,359 | https://instagram.com/zephanijong
-Doubleu | 2034 | https://www.instagram.com/double_the_u
-Ava Beathard | 1247 | https://instagram.com/avabeathard
-Iasmin | 1126 | https://instagram.com/iasmin.cantora
+Mc Marechal | 145,567 | [https://instagram.com/mcmarechal](https://instagram.com/mcmarechal)
+Zeph | 11,359 | [https://instagram.com/zephanijong](https://instagram.com/zephanijong)
+Doubleu | 2034 | [https://www.instagram.com/double_the_u](https://www.instagram.com/double_the_u)
+Ava Beathard | 1247 | [https://instagram.com/avabeathard](https://instagram.com/avabeathard)
+Iasmin | 1126 | [https://instagram.com/iasmin.cantora](https://instagram.com/iasmin.cantora)
 
 This is a list of the top 5 artists who only have one track. Mc Marechal is considered popular and he happens to be a Brazilian Rapper, however the others seem to be influencers on Instagram and other online platforms like YouTube. To be clear, this list does not represent the data fairly, this list was created with a heavily filtered dataset through many inner joins in the query. However, the idea that influencers who have a large fanbase who create one track that considers them popular on Spotify seems to be true within the normal dataset.
