@@ -89,7 +89,8 @@ This is a list of the top 5 artists who only have one track. Mc Marechal is cons
 
   We split our data into 80% for training, and 20% in for testing. We achieved 99% accuracy with very low false-positive and false-negative rates. The confusion matrix can be seen below.
 
-**PUT YOUR PLOT HERE BRIAN**
+![Plot #5](https://github.com/Coldestadam/SpotifyBSDS200/blob/master/plot/logit_confusion_matrix.png?raw=true)
+
 
   Unfortunately, we have come to the realization that our data is heavily skewed with 34,111 ‘not popular’ artists, and only 3,790 ‘popular’ artists, which likely is similar to the real-world distribution of popular versus non-popular artists. Despite the fact that our model has such high accuracy, we don’t expect it to generalize well due to the data distribution. We leave exploring different models, and scraping more data to further work.
 
