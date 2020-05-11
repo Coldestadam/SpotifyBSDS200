@@ -93,7 +93,7 @@ This is a list of the top 5 artists who only have one track. Mc Marechal is cons
 
   Unfortunately, we have come to the realization that our data is heavily skewed with 34,111 ‘not popular’ artists, and only 3,790 ‘popular’ artists, which likely is similar to the real-world distribution of popular versus non-popular artists. Despite the fact that our model has such high accuracy, we don’t expect it to generalize well due to the data distribution. We leave exploring different models, and scraping more data to further work.
 
-# What are the correlations between audio characteristics (e.g., acousticness, valence, key) and artist popularity?
+## What are the correlations between audio characteristics (e.g., acousticness, valence, key) and artist popularity?
 
   We looked at the artist-level audio characteristics data and determine the correlation between audio characteristics and artist popularity. There are approximately 128 thousand unique artists. Each artist has produced roughly 8 tracks. Each track has a set of audio features. These features estimate a track’s overall: valence, danceability, energy, loudness, speechiness, acousticness, instrumentalness, liveness, valence, tempo, time signature, and duration (ms). We calculated artist-level features by taking the average feature values of each track grouped by artist_id.
 
