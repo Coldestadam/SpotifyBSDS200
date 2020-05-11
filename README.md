@@ -10,4 +10,4 @@
   - Linkedin: [https://www.linkedin.com/in/adam-v99/]
   - Github: [https://github.com/Coldestadam]
 
-https://github.com/Coldestadam
+[Click here](https://github.com/Coldestadam)
