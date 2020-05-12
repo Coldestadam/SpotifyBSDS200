@@ -14,7 +14,7 @@
 
 What makes an artist "popular"? Is it luck? Talent? Social media skills? These are questions we investigate in this work.
 
-We determined artist popularity based on their number of Spotify followers. Artists were assigned a popularity label based on whether their follower count was above or below the 90th percentile. Note, we arbitrarily set the popularity threshold to the 90th percentile. Nonetheless, we believe this value is restrictive enough to  merit valid research.
+We determined artist popularity based on their number of Spotify followers. Artists were assigned a popularity label based on whether their follower count was above or below the 90th percentile. Note, we arbitrarily set the popularity threshold to the 90th percentile. Nonetheless, we believe this value is restrictive enough to  merit a valid representation of the true popularity threshold.
 
 # Data Collections
 To investigate the artist popularity question, we collected over 3 million data points from both Spotify and Twitter. In particular, track audio characteristics, Twitter user metrics, and artist discographies we gathers. While we could consider other information such as YouTube view counts, we felt these data points were a good place to start.      
@@ -43,15 +43,16 @@ The variables we explored are shown below.
 
 
 ## How many tracks on average, does an artist release prior to becoming popular?
-  We used SQL to gather data to solve this problem, and the variables we are the total number of *followers* and *tracks* that each artist has made. Once we collected the data, we looked at the distributions of the variables and saw what changes can be made to the SQL query, such as the removal of outliers. After, we began looking at the relationship between the number of followers and track count to see if there is some linear or exponential relationship. We viewied this relationship through our interpretation of the popularity threshold, which is the 90th percentile of the number of followers of all our Spotify artists. In other words, we got the number of followers that 90% of Spotify artists do not have, but 10% of artists have followers above that number. That 10% of all artists are considered "popular".
+  In this question, we analyze whether there is a relationship between an artist's Spotify *follower*  count and the number of *tracks* they produced. Our preliminary analysis revealed that mislabeled "artist" accounts, particularly music complication and bot accounts, were significant skewing the data distribution. These "artist" accounts had significantly higher track counts than the average artist. We address this issue by removing these data points, since they do not reflect the type of artist we study in this work.
 
-  With this, we can created a subset of data around our popularity threshold to see what is the average number of tracks that artists have when they are close to being popular. To answer the question, we plotted the relationship between the number of tracks and followers for the artist in our subset. Further, we averaged the amount of followers for separated categories that detailed a range for the number of tracks, and we found the reason why there are popular artists who have one track.
+  The scatter plot between follower count and track count (with outliers removed) was too noisy to discern a meaningful relationship between the two variables. To address this issue, we created a subset of the outlier-free data. Specifically, data points within &#177; 5 of the 90th percentile popularity threshold were selected and visualized to see if a relationship exists around the popularity boundary. The plots are shown below.  
 
 ![Plot #1](https://github.com/Coldestadam/SpotifyBSDS200/blob/master/plot/follower_track_relationship(most500).png?raw=true)
 ![Plot #2](https://github.com/Coldestadam/SpotifyBSDS200/blob/master/plot/follower_track_relationship(most200).png?raw=true)
 
-These plots show that there is really no linear or exponential relationship between follower count and the total number of tracks an artist has. The first plot shows the relationship of the data given through the SQL query and the second plot shows data only of artists that have at most 200 tracks. It seems that many artists with 1-25 tracks are considered popular, which was not what we expected. We expected there to be somewhat of a gradual increase of followers when the number of tracks increases.
+ The first plot shows the relationship between the two variables with outliers removed and artists between the 85th and 95th percentiles. The second plot filters the data further, showing artists that have at most 200 tracks. Both plots show no clear relationship between follower count and track count. However, an interesting pattern can be seen in the left corners of both plots: many artists with 1 to 25 tracks are popular, which was not what we expected.
 
+ To understand the low track count but high follower count result, we separated data points into 9 bins each of size 25. Then, each artist was assigned to a bin based on the number of tracks they had produced. Finally, we calculate the average follower count per bin, and the resulting table is shown below.
 
 Total Tracks | Average Followers
 ------------ | -----------------
@@ -65,7 +66,9 @@ Total Tracks | Average Followers
 26-50 | 550,359
 1-25 | 343,192
 
-The Table above shows the average follower counts of popular artists per category of tracks.
+From the table above, we see that follower count generally increases when track counts are higher. This is interesting since previous results suggested otherwise.
+
+While the table above suggests that producing more music may increase an artist's popular, it doesn't explain why some artists become popular after producing only a few tracks. To this end, we selected the five most popular artists with only 1 track in their repertoire and present the results below.       
 
 
 Artist Name | Follower Count | Instagram
@@ -76,7 +79,7 @@ Doubleu | 2034 | [https://www.instagram.com/double_the_u](https://www.instagram.
 Ava Beathard | 1247 | [https://instagram.com/avabeathard](https://instagram.com/avabeathard)
 Iasmin | 1126 | [https://instagram.com/iasmin.cantora](https://instagram.com/iasmin.cantora)
 
-This is a list of the top 5 artists who only have one track. Mc Marechal is considered popular and he happens to be a Brazilian Rapper, however the others seem to be influencers on Instagram and other online platforms like YouTube. To be clear, this list does not represent the data fairly, this list was created with a heavily filtered dataset through many inner joins in the query. However, the idea that influencers who have a large fanbase who create one track that considers them popular on Spotify seems to be true within the normal dataset.
+We find that the majority of popular artists with few tracks consist of "influencers" from other entertainment domains (i.e., YouTube, TikTok, Instagram, etc.). However, Mc Marechal  happens to be an outlier in this regard since he is a well-known Brazilian Rapper. Nonetheless, the others seem to be influencers on Instagram and other online platforms like YouTube. To be clear, this list does not provide a completely accurate representation of the data, since it was created by heavily filtering dataset. However, the observation that influencers with large fanbase tend to be successful despite releasing fewer tracks on average makes sense.
 
 
 ## How much does an artist's Twitter presence impact their popularity?
