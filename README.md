@@ -14,10 +14,10 @@
 
 What makes an artist "popular"? Is it luck? Talent? Social media skills? These are questions we investigate in this work.
 
-We determined artists' popularity based on the number of Spotify followers they have and we contained other variables as well. As a glimpse of the other variables we used, we have the number of tracks artists have and the audio characteristics of their music. In this report, we dive further down to discover what variables can lead to an increase of followers that an artist can have, or rather their popularity.
+We determined artist popularity based on their number of Spotify followers. Artists were assigned a popularity label based on whether their follower count was above or below the 90th percentile. Note, we arbitrarily set the popularity threshold to the 90th percentile. Nonetheless, we believe this value is restrictive enough to  merit valid research.
 
 # Data Collections
-To investigate our artist popularity question, we collected over 3 million data points from both Spotify and Twitter. In particular, track audio characteristics, Twitter user metrics, and artist discographies we gathers. While we could consider other information such as YouTube view counts, we felt these data points were a good place to start.      
+To investigate the artist popularity question, we collected over 3 million data points from both Spotify and Twitter. In particular, track audio characteristics, Twitter user metrics, and artist discographies we gathers. While we could consider other information such as YouTube view counts, we felt these data points were a good place to start.      
 
 ### Variables Used
 The variables we explored are shown below.
