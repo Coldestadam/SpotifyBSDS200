@@ -5,9 +5,10 @@ authors: Kai Middlebrook
 from datetime import datetime
 
 import spotipy  # noqa: F401
+from spotipy.oauth2 import SpotifyClientCredentials  # noqa: F401
+
 from config import SPOTIPY_CLIENTS, SPOTIPY_CREDS, SPOTIPY_REQUESTS_TIMEOUT  # noqa
 from dsjobs import app
-from spotipy.oauth2 import SpotifyClientCredentials  # noqa: F401
 
 
 def chunkify(input, chunk_size=20):

@@ -7,11 +7,11 @@ import time
 from datetime import datetime
 
 import pandas as pd
-
-import config as config
 import spotipy
 from celery import group
 from celery.utils.log import get_task_logger
+
+import config as config
 from dsjobs import app
 from utils import SpotipyMux, chunkify, flow_complete
 

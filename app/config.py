@@ -5,12 +5,12 @@ authors: Kai Middlebrook
 import json
 import os
 
-# sqlalchemy imports
-from sqlalchemy import create_engine
-
 # spotipy imports
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+
+# sqlalchemy imports
+from sqlalchemy import create_engine
 
 # local imports
 

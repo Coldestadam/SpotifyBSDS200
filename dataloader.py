@@ -289,9 +289,7 @@ def plot_corrMatrix(corrMatrix, filepath):
 
     # make heatmap of the corrMatrix
     heat = sn.heatmap(corrMatrix, annot=True)
-    heat.set_title(
-        "Correlation Matrix"
-    )
+    heat.set_title("Correlation Matrix")
     plt.tight_layout()
 
     # save heatmap
@@ -299,6 +297,7 @@ def plot_corrMatrix(corrMatrix, filepath):
 
     print_statement = f"Correlation Matrix Heatmap saved to: {filepath}."
     print(print_statement)
+
 
 def plot_scatterMatrix(df, filepath):
     """Function to create a plot of a scatter plot matrix and save it.
@@ -493,7 +492,11 @@ def plot_track_follower_relationship(base_dir, max_track=500):
     # Getting all artists who are between
     # the 85th and 95th Percentile of Follower Counts
     # And have at most 200 tracks
-    filter_boolean = (data.follower_count >= pct_85) & (data.follower_count <= pct_95) & (data.total_tracks <= max_track)
+    filter_boolean = (
+        (data.follower_count >= pct_85)
+        & (data.follower_count <= pct_95)
+        & (data.total_tracks <= max_track)
+    )
 
     # Getting X and Y values for our scatter plot
     x = data.total_tracks[filter_boolean]
@@ -524,15 +527,16 @@ def plot_track_follower_relationship(base_dir, max_track=500):
     """
     print(print_statement)
 
-
-    #ANSWER TO QUESTION 1
+    # ANSWER TO QUESTION 1
     def get_names(data, num_tracks, top_num):
-        subset = data.loc[data.total_tracks==num_tracks, :]
-        names = subset.nlargest(top_num, 'follower_count').loc[:, ['artist_name', 'follower_count', 'instagram']]
+        subset = data.loc[data.total_tracks == num_tracks, :]
+        names = subset.nlargest(top_num, "follower_count").loc[
+            :, ["artist_name", "follower_count", "instagram"]
+        ]
         return names
 
     def Ques_1():
-        print('This is the answer for Question 1:\n\n')
+        print("This is the answer for Question 1:\n\n")
         query = f"""
                 SELECT lhs2.artist_id, follower_count, total_tracks, artist_name, instagram
                 FROM (
@@ -552,50 +556,61 @@ def plot_track_follower_relationship(base_dir, max_track=500):
                     (SELECT DISTINCT(artist_id), artist_name FROM song_pop.tracks) as rhs2
                 ON lhs2.artist_id = rhs2.artist_id;"""
 
-        #Getting data from SQL Query
+        # Getting data from SQL Query
         with engine.connect() as con:
             data = pd.read_sql(query, con)
 
-        #Adding categorical bins for the number of tracks
+        # Adding categorical bins for the number of tracks
         new_row = np.empty(data.shape[0])
-        new_row[:] = np.nan#A numpy array full of Nans
+        new_row[:] = np.nan  # A numpy array full of Nans
 
-        data.loc[:, 'track_bins'] = new_row
+        data.loc[:, "track_bins"] = new_row
 
-        #Categoring the Data
-        data.loc[data.total_tracks>200, 'track_bins'] = '200+'
-        data.loc[data.total_tracks<=200, 'track_bins'] = '176-200'
-        data.loc[data.total_tracks<=175, 'track_bins'] = '151-175'
-        data.loc[data.total_tracks<=150, 'track_bins'] = '126-150'
-        data.loc[data.total_tracks<=125, 'track_bins'] = '101-125'
-        data.loc[data.total_tracks<=100, 'track_bins'] = '76-100'
-        data.loc[data.total_tracks<=75, 'track_bins'] = '51-75'
-        data.loc[data.total_tracks<=50, 'track_bins'] = '26-50'
-        data.loc[data.total_tracks<=25, 'track_bins'] = '1-25'
+        # Categoring the Data
+        data.loc[data.total_tracks > 200, "track_bins"] = "200+"
+        data.loc[data.total_tracks <= 200, "track_bins"] = "176-200"
+        data.loc[data.total_tracks <= 175, "track_bins"] = "151-175"
+        data.loc[data.total_tracks <= 150, "track_bins"] = "126-150"
+        data.loc[data.total_tracks <= 125, "track_bins"] = "101-125"
+        data.loc[data.total_tracks <= 100, "track_bins"] = "76-100"
+        data.loc[data.total_tracks <= 75, "track_bins"] = "51-75"
+        data.loc[data.total_tracks <= 50, "track_bins"] = "26-50"
+        data.loc[data.total_tracks <= 25, "track_bins"] = "1-25"
 
-        print('\nThe distribution of artists by category:')
+        print("\nThe distribution of artists by category:")
         print(data.track_bins.value_counts())
 
-        #Getting the threshold of what makes a person popular
+        # Getting the threshold of what makes a person popular
         popular_threshold = data.follower_count.quantile(0.9)
-        print('\nPopularity threshold:', popular_threshold)
+        print("\nPopularity threshold:", popular_threshold)
 
-        #Subsetting the data to get only the data of popular artists
+        # Subsetting the data to get only the data of popular artists
         popular_data = data.loc[data.follower_count > popular_threshold, :]
 
-        #Getting the Avg Follower Count for each bin
-        avg_table = popular_data.groupby('track_bins').agg({'follower_count':'mean'}).round()
-        avg_table.columns = ['Avg Followers']
-        avg_table = avg_table.reindex(['200+', '176-200', '151-175', '126-150', 
-                                       '101-125', '76-100', '51-75', '26-50', '1-25'])
+        # Getting the Avg Follower Count for each bin
+        avg_table = (
+            popular_data.groupby("track_bins").agg({"follower_count": "mean"}).round()
+        )
+        avg_table.columns = ["Avg Followers"]
+        avg_table = avg_table.reindex(
+            [
+                "200+",
+                "176-200",
+                "151-175",
+                "126-150",
+                "101-125",
+                "76-100",
+                "51-75",
+                "26-50",
+                "1-25",
+            ]
+        )
 
-        print('\nTable of Average Follower Count for each bin:')
+        print("\nTable of Average Follower Count for each bin:")
         print(avg_table)
 
-
-
         top_5_1 = get_names(data, num_tracks=1, top_num=5)
-        print('\nTop 5 Artists with 1 track:')
+        print("\nTop 5 Artists with 1 track:")
         print(top_5_1)
         message = f"""IMPORTANT: There are many artists with 1 track, however we lost a lot of data in our query. You are invited for further investigation"""
 
@@ -615,5 +630,5 @@ if __name__ == "__main__":
     plot_track_follower_relationship(base_dir, max_track=200)
     plot_track_follower_relationship(base_dir, max_track=500)
 
-    #Answers
+    # Answers
     Ques_1()
